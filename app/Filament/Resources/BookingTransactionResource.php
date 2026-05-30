@@ -23,7 +23,47 @@ class BookingTransactionResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('booking_trx_id')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('phone_number')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('total_amount')
+                    ->required()
+                    ->numeric()
+                    ->prefix('IDR'),
+
+                Forms\Components\TextInput::make('duration')
+                    ->required()
+                    ->numeric()
+                    ->prefix('Days'),
+
+                Forms\Components\DatePicker::make('started_at')
+                    ->required(),
+
+                Forms\Components\DatePicker::make('ended_at')
+                    ->required(),
+
+
+                Forms\Components\Select::make('office_space_id')
+                ->relationship('officeSpace', 'name')
+                ->required()
+                ->searchable()
+                ->preload(),
+
+                Forms\Components\Toggle::make('is_paid')
+                    ->required()
+                    ->onColor('success')
+                    ->offColor('danger'),
+
+
             ]);
     }
 
@@ -31,7 +71,20 @@ class BookingTransactionResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('booking_trx_id')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('phone_number')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('total_amount')->money('idr', true)->sortable(),
+                Tables\Columns\TextColumn::make('duration')->suffix(' Days')->sortable(),
+                Tables\Columns\TextColumn::make('started_at')->sortable(),
+                Tables\Columns\TextColumn::make('ended_at')->sortable(),
+                Tables\Columns\TextColumn::make('officeSpace.name')->searchable()->sortable(),
+                Tables\Columns\IconColumn::make('is_paid')
+                    ->boolean()
+                    ->trueIcon('heroicon-m-bolt')
+                    ->falseIcon('heroicon-m-bolt-slash')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
             ])
             ->filters([
                 //
